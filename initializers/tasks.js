@@ -1,6 +1,29 @@
 'use strict'
 
 const async = require('async')
+const loader = function(fullFilePath) {
+  const klass = require(fullFilePath)
+  let _task = new klass()
+
+  function makeRunner(context){
+    function runner (api, params, next){
+      context.task.run(params).then(() =>{ next(); }).catch(next);
+    }
+    return runner;
+  }
+
+  let task = {
+    name: klass.name,
+    description:   '  ',
+    queue:         'default',
+    frequency:     0,
+    task:          _task,
+  }
+
+  task.run = makeRunner(task);
+
+  return [task]
+};
 
 module.exports = {
   startPriority: 900,
@@ -26,7 +49,14 @@ module.exports = {
 
         let task
         try {
-          const collection = require(fullFilePath)
+          // let collection;
+          // if(api.config.tasks.loader){
+          //   collection = api.config.tasks.loader(fullFilePath);
+          // } else {
+          //   collection = require(fullFilePath);
+          // }
+
+          let collection = loader(fullFilePath);
           for (let i in collection) {
             task = collection[i]
             api.tasks.tasks[task.name] = task
