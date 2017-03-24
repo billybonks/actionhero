@@ -3,17 +3,18 @@
 const async = require('async')
 const loader = function(fullFilePath) {
   const klass = require(fullFilePath)
-  let _task = new klass()
 
   function makeRunner(context){
     function runner (api, params, next){
-      context.task.run(params).then(() =>{ next(); }).catch(next);
+      let _task = new this.klass;
+      _task.run(params).then(() =>{ next(); }).catch(next);
     }
     return runner;
   }
 
   let task = {
     name: klass.name,
+    klass: klass
     description:   '  ',
     queue:         'default',
     frequency:     0,
