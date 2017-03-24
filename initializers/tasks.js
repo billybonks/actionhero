@@ -14,7 +14,7 @@ const loader = function(fullFilePath) {
 
   let task = {
     name: klass.name,
-    klass: klass
+    klass: klass,
     description:   '  ',
     queue:         'default',
     frequency:     0,
