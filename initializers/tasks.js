@@ -18,7 +18,6 @@ const loader = function(fullFilePath) {
     description:   '  ',
     queue:         'default',
     frequency:     0,
-    task:          _task,
   }
 
   task.run = makeRunner(task);
